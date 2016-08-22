@@ -1,0 +1,1 @@
+java -cp scala-library.jar;PbM_MTP.jar meta.Starter

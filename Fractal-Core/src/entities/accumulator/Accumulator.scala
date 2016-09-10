@@ -1,9 +1,10 @@
 package entities.accumulator
 
-trait Accumulator[A] {
-  def neutral: A
-  def fold(left:A, right:Double) : A
-  def lastOperation(result:A, count:Int) : Double
+trait Accumulator {
+  type State
+  def neutral: State
+  def fold(left:State, right:Double) : State
+  def lastOperation(result:State, count:Int) : Double
 
   def apply(collection:TraversableOnce[Double]): Double =
       lastOperation(collection.foldLeft(neutral)(fold), collection.size)

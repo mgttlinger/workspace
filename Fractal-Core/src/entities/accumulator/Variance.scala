@@ -1,6 +1,7 @@
 package entities.accumulator
 
-case object Variance extends Accumulator[(Double, Double)] {
+case object Variance extends Accumulator {
+  override type State = (Double, Double)
   override val neutral = (Arithmetic.neutral, Arithmetic.neutral)
 
   override def fold(left: (Double, Double), right: Double): (Double, Double) = {

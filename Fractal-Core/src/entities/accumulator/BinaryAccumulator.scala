@@ -1,34 +1,33 @@
 package entities.accumulator
 
-trait BinaryAccumulator[A, B] extends Accumulator[(A, B)]{
-  def left:Accumulator[A]
-  def right:Accumulator[B]
+abstract class BinaryAccumulator(val _left: Accumulator, val _right: Accumulator) extends Accumulator {
+  override type State = (_left.State, _right.State)
 
-  override def neutral: (A, B) = (left.neutral, right.neutral)
-  override def fold(input: (A, B), next: Double): (A, B) =
-    (left.fold(input._1, next), right.fold(input._2, next))
+  override def neutral: State = (_left.neutral, _right.neutral)
+  override def fold(input: State, next: Double): State =
+    (_left.fold(input._1, next), _right.fold(input._2, next))
 }
 
-case class Norm(left: Accumulator[Double], right: Accumulator[Double]) extends BinaryAccumulator[Double, Double] {
-  override def lastOperation(result: (Double, Double), count:Int): Double = {
-    val l = left.lastOperation(result._1, count)
-    val r = right.lastOperation(result._2, count)
+case class Norm(left: Accumulator, right: Accumulator) extends BinaryAccumulator(left, right) {
+  override def lastOperation(result: State, count:Int): Double = {
+    val l = _left.lastOperation(result._1, count)
+    val r = _right.lastOperation(result._2, count)
     Math.sqrt(l*l + r*r)
   }
 }
 
-case class Add(left: Accumulator[Double], right: Accumulator[Double]) extends BinaryAccumulator[Double, Double] {
-  override def lastOperation(result: (Double, Double), count:Int): Double = {
-    val l = left.lastOperation(result._1, count)
-    val r = right.lastOperation(result._2, count)
+case class Add(left: Accumulator, right: Accumulator) extends BinaryAccumulator(left, right) {
+  override def lastOperation(result: State, count:Int): Double = {
+    val l = _left.lastOperation(result._1, count)
+    val r = _right.lastOperation(result._2, count)
     l+r
   }
 }
 
-case class Sub(left: Accumulator[Double], right: Accumulator[Double]) extends BinaryAccumulator[Double, Double] {
-  override def lastOperation(result: (Double, Double), count:Int): Double = {
-    val l = left.lastOperation(result._1, count)
-    val r = right.lastOperation(result._2, count)
+case class Sub(left: Accumulator, right: Accumulator) extends BinaryAccumulator(left, right) {
+  override def lastOperation(result: State, count:Int): Double = {
+    val l = _left.lastOperation(result._1, count)
+    val r = _right.lastOperation(result._2, count)
     l-r
   }
 }

@@ -98,39 +98,35 @@ object Viewport {
     createViewportByLongs(0xbffff1289a2f9024L, 0x3ecc1658de9600a1L, 0x3e89545b65000000L, 0x0000000000000000L, 0x0000000000000000L, 0xbe7cf2b1970e7280L))
 }
 
-@SerialVersionUID(1L)
-case class Viewport(U: Point, A: Point, B: Point) extends Serializable {
+case class Viewport(origin: Point, A: Point, B: Point) {
   require(PointUtil.linearIndependant(A, B))
 
-  val factorMove: Double = 0.20
-  val factorZoom: Double = 0.40
-  val invFactorZoom: Double = 1.0 / (1.0 - factorZoom)
+  val defaultMovementFactor: Double = 0.20
+  val defaultZoomFactor: Double = 0.40
+  val invFactorZoom: Double = 1.0 / (1.0 - defaultZoomFactor)
 
-  def translate(t: Point): Viewport = new Viewport(U + t, A, B)
+  def translate(t: Point): Viewport = new Viewport(origin + t, A, B)
 
-  def right(): Viewport = translate(A * factorMove)
+  def right(movementFactor: Double = defaultMovementFactor): Viewport = translate(A * movementFactor)
+  def left(movementFactor: Double = defaultMovementFactor): Viewport = translate(A * -movementFactor)
+  def up(movementFactor: Double = defaultMovementFactor): Viewport = translate(B * -movementFactor)
+  def down(movementFactor: Double = defaultMovementFactor): Viewport = translate(B * movementFactor)
 
-  def left(): Viewport = translate(A * -factorMove)
-
-  def up(): Viewport = translate(B * -factorMove)
-
-  def down(): Viewport = translate(B * factorMove)
-
-  def focus(zielx: Double, ziely: Double): Viewport =
-    translate(A * (zielx - 0.5) + (B * (ziely - 0.5)))
+  def focus(xRatio: Double, yRatio: Double): Viewport =
+    translate(A * (xRatio - 0.5) + (B * (yRatio - 0.5)))
 
   def zoomOut(zx: Double = 0.5, zy: Double = 0.5): Viewport =
     new Viewport(
       A = A * invFactorZoom,
       B = B * invFactorZoom,
-      U = U + ((A * (-factorZoom * zx) + B * (-factorZoom * zy)) * invFactorZoom)
+      origin = origin + ((A * (-defaultZoomFactor * zx) + B * (-defaultZoomFactor * zy)) * invFactorZoom)
     )
 
   def zoomIn(zx: Double = 0.5, zy: Double = 0.5): Viewport =
     new Viewport(
-      A = A * (1 - factorZoom),
-      B = B * (1 - factorZoom),
-      U = U + (A * (factorZoom * zx)) + (B * (factorZoom * zy))
+      A = A * (1 - defaultZoomFactor),
+      B = B * (1 - defaultZoomFactor),
+      origin = origin + (A * (defaultZoomFactor * zx)) + (B * (defaultZoomFactor * zy))
     )
 
   def zoom(zx: Double, zy: Double, steps: Int): Viewport = {
@@ -141,9 +137,6 @@ case class Viewport(U: Point, A: Point, B: Point) extends Serializable {
       for (i <- 0 until -steps) view = view.zoomIn(zx, zy)
     view
   }
-
-  override def toString: String =
-    "%s, %s, %s".format(U, A, B)
 }
 
 object Fokus {
@@ -316,7 +309,7 @@ object Fokus {
 }
 
 class Fokus(val a: Point, val b: Point) extends Viewport(Fokus.extractU(a, b), Fokus.extractA(a, b), Fokus.extractB(a, b)) {
-  override def toString: String = "Fokus(%s, %s)".format(a, b)
+  override def toString: String = s"Fokus($a, $b)"
 
   def this(a: Long, b: Long, c: Long, d: Long) = this(PointUtil.createPointByLongs(a, b), PointUtil.createPointByLongs(c, d))
 }

@@ -1,6 +1,7 @@
 package entities
 package content
 
+// Implements SSAA/FSAA
 case class AntiAliasedFractalContent(fractal: Fractal, transform: Transform,
                                      accu: Accumulator, multi: Int)
   extends Content {

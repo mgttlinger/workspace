@@ -92,7 +92,7 @@ object Mandelbrot {
       new Iterator(x0, y0, maxIteration).foldLeft(1e20) {
         (d, x, y) =>
           val (dx, dy) = (x - trapx, y - trapy)
-          math.min(d, math.sqrt(dx * dx + dy * dy))
+          math.min(d, dx * dx + dy * dy)
       }
   }
 

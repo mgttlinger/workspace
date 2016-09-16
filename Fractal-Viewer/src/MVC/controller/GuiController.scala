@@ -7,7 +7,7 @@ import MVC.view.View
 import entities.fractal.Mandelbrot
 import entities.viewport.{Dimensions, Point}
 
-import entities.Syntax._
+import entities.syntax._
 
 class GuiController(val modell: Model, val view: View) extends KeyListener with MouseListener with MouseWheelListener with MouseMotionListener {
   val master = view.imgPanel

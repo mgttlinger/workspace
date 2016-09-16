@@ -1,6 +1,6 @@
 package meta
 
-import entities.Syntax._
+import entities.syntax._
 import entities.accumulator.Max
 import entities.color.HSV
 import entities.content.Content

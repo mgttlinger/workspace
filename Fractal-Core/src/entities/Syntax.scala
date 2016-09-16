@@ -4,6 +4,7 @@ import entities.accumulator.Arithmetic
 import entities.color.Color
 import entities.content._
 import entities.image.Image
+import java.io.File
 
 object syntax {
   implicit class EnrichedViewport(val viewport: Viewport) extends AnyVal {
@@ -34,15 +35,17 @@ object syntax {
   }
 
   implicit class EnrichedImage(val image: Image) extends AnyVal {
-    def save(file: java.io.File): Unit = {
+    def save(file: java.io.File): File = {
       if (file.getParentFile != null)
         file.getParentFile.mkdirs()
       javax.imageio.ImageIO.write(image.buffer, "png", file)
+      file
      }
-    def verboseSave(fileName: String): Unit = {
+    def verboseSave(fileName: String): File = {
       val file = new java.io.File(fileName)
       save(file)
       println("Saved: " + file.getAbsoluteFile)
+      file
     }
     def save(fileName: String): Unit = save(new java.io.File(fileName))
   }

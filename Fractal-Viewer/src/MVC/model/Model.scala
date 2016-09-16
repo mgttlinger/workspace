@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage
 
 import MVC.{ContentFactory, SimpleFactory}
 import entities.Fractal
-import entities.Syntax._
+import entities.syntax._
 import entities.color.{Color, HSV}
 import entities.viewport.{Point, Viewport, ViewportUtil}
 import util.Observable

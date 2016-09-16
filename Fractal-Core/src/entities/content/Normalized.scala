@@ -5,7 +5,7 @@ import entities.accumulator.{Max, Min}
 
 trait Normalized
 
-case class LinearNormalizedContent(content:CachedContent) extends Content with Normalized{
+case class LinearNormalizedContent(content: CachedContent) extends Content with Normalized {
   val dimensions = content.dimensions
 
   private val max = content.applyAccumulator(Max)
@@ -19,12 +19,12 @@ case class LinearNormalizedContent(content:CachedContent) extends Content with N
     else if (v < min) min
     else v
 
-  def apply(x:Int, y:Int): Double = {
+  def apply(x: Int, y: Int): Double = {
     clamp(y0 + content(x, y) * dy, 1, 0)
   }
 }
 
-case class StrongNormalizedContent(content:CachedContent) extends Content with Normalized {
+case class StrongNormalizedContent(content: CachedContent) extends Content with Normalized {
   val dimensions = content.dimensions
 
   private val map = (for (x <- 0 until width; y <- 0 until height)
@@ -35,8 +35,9 @@ case class StrongNormalizedContent(content:CachedContent) extends Content with N
   private val values = Array.fill[Double](width, height)(0d)
 
   private var finished = 0
-  for((value, pos) <- sorted){
-    for((x, y) <- pos){
+  
+  for ((value, pos) <- sorted) {
+    for ((x, y) <- pos) {
       values(x)(y) = finished.toDouble / (width * height)
     }
     finished += pos.size

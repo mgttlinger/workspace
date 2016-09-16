@@ -5,7 +5,7 @@ import entities.content.{AntiAliasedFractalContent, BuddahBrot}
 import entities.viewport.Dimensions
 import entities.{Content, Transform}
 
-import entities.Syntax._
+import entities.syntax._
 
 trait ContentFactory {
   def simple(model: Model): Content

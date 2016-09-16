@@ -9,7 +9,7 @@ import MVC.model.Model
 import entities.viewport.Transform
 import entities.viewport.Dimensions
 import entities.viewport._
-import entities.Syntax._
+import entities.syntax._
 
 class ImagePanel(val modell: Model) extends JPanel with Observer {
   modell.addObserver(this)
